@@ -1,47 +1,58 @@
 @startuml ActivityDiagram
+skinparam defaultFontName Arial
+skinparam roundcorner 10
 skinparam conditionStyle insideDiamond
+
+' Định nghĩa màu sắc cho từng khối
 skinparam Activity {
   BackgroundColor #FAFAFA
-  BorderColor #2E7D32
-  ArrowColor #1B5E20
+  BorderColor #424242
+  ArrowColor #424242
+  
+  BackgroundColor<<Model>> #E8F5E9
+  BorderColor<<Model>> #2E7D32
+  
+  BackgroundColor<<Process>> #FFF3E0
+  BorderColor<<Process>> #EF6C00
+  
+  BackgroundColor<<IO>> #E3F2FD
+  BorderColor<<IO>> #1565C0
 }
 
 start
 :Khởi tạo **DataLoader** và **AlphabetRecognizer**;
-
 if (Đã tồn tại file **saved_model.pkl**?) then (Có)
-    :Gọi hàm **load()**;
-    :Thông báo "Load model cũ thành công";
+    :Gọi hàm **load()** <<Model>>;
+    :Thông báo "Load model cũ thành công" <<IO>>;
 else (Không)
-    :Thông báo "Không tìm thấy model, bắt đầu Train";
-    :Gọi hàm **load_training_data()**\n(Tải tối đa 3000 ảnh/nhãn từ Kaggle);
+    :Thông báo "Không tìm thấy model, bắt đầu Train" <<IO>>;
+    :Gọi hàm **load_training_data()**\n(Tải data ảnh từ thư mục) <<Process>>;
     note right: Sử dụng preprocess_image()\nvới is_input=False
-    :Gọi hàm **train(X, y)**\n(Huấn luyện Logistic Regression);
-    :Gọi hàm **save()**\n(Lưu model ra file .pkl);
+    :Gọi hàm **train(X, y)**\n(Huấn luyện Logistic Regression) <<Model>>;
+    :Gọi hàm **save()**\n(Lưu model ra file .pkl) <<Model>>;
 endif
 
-:Quét thư mục **Input**;
-
+:Quét thư mục **Input** <<IO>>;
 if (Thư mục trống?) then (Có)
-    :Thông báo lỗi "Thư mục trống";
+    :Thông báo lỗi "Thư mục trống" <<IO>>;
     stop
 else (Không)
-    :Gọi hàm **load_input_folder()**;
+    :Gọi hàm **load_input_folder()** <<Process>>;
     
     while (Còn file ảnh chưa xử lý?) is (Còn)
-        :Đọc file ảnh (Grayscale);
-        :Tiền xử lý ảnh (Khử nền, cắt viền, làm đậm);\n(is_input=True)
-        :Lưu ảnh 28x28 vào thư mục **Output/Debug**;
-        :Duỗi phẳng thành mảng 784 chiều;
-        :Đưa mảng vào mảng tổng (X_input);
+        :Đọc file ảnh (Grayscale) <<Process>>;
+        :Tiền xử lý ảnh (Khử nền, cắt viền, làm đậm);\n(is_input=True) <<Process>>;
+        :Lưu ảnh 28x28 vào thư mục **Output/Debug** <<IO>>;
+        :Duỗi phẳng thành mảng 784 chiều <<Process>>;
+        :Đưa mảng vào mảng tổng (X_input) <<Process>>;
     endwhile (Hết)
 
-    :Gọi hàm **predict(X_input)**;
-    :Ghép kết quả dự đoán với tên file;
+    :Gọi hàm **predict(X_input)** <<Model>>;
+    :Ghép kết quả dự đoán với tên file <<Process>>;
     
-    :Tạo và mở file **Output/result.txt**;
-    :Ghi log định dạng "Tên file | Kết quả";
-    :Thông báo hoàn tất;
+    :Tạo và mở file **Output/result.txt** <<IO>>;
+    :Ghi log định dạng "Tên file | Kết quả" <<IO>>;
+    :Thông báo hoàn tất <<IO>>;
 endif
 
 stop

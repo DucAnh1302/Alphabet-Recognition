@@ -5,22 +5,21 @@ skinparam roundcorner 10
 skinparam conditionStyle insideDiamond
 
 skinparam Activity {
-  BackgroundColor #E3F2FD
-  BorderColor #1565C0
+  BackgroundColor #FFFFFF
+  BorderColor #455A64
   FontColor black
 }
 skinparam Partition {
   BorderColor #455A64
-  BackgroundColor #FAFAFA
   FontColor #263238
   FontStyle bold
 }
 
-' --- ĐỊNH NGHĨA CÁC LÀN (SWIMLANES) ---
+' --- ĐỊNH NGHĨA CÁC LÀN (SWIMLANES) KÈM MÀU NỀN TƯƠI SÁNG ---
 |#F5F5F5| 1. INPUT |
-|#E8F5E9| 2.1 MODULE TIỀN XỬ LÝ (data_loader.py) |
-|#FFF3E0| 2.2 MODULE TRÍ TUỆ NHÂN TẠO (model_logic.py) |
-|#F5F5F5| 3. OUTPUT |
+|#E3F2FD| 2.1 MODULE TIỀN XỬ LÝ (data_loader.py) |
+|#E8F5E9| 2.2 MODULE TRÍ TUỆ NHÂN TẠO (model_logic.py) |
+|#FFF3E0| 3. OUTPUT |
 
 ' --- LUỒNG DỮ LIỆU ---
 | 1. INPUT |
@@ -28,26 +27,25 @@ start
 :Đọc ảnh đầu vào từ người dùng\n(VD: Hinh1.jpg, anh_ve_tay.png);
 
 | 2.1 MODULE TIỀN XỬ LÝ (data_loader.py) |
-:Chuyển đổi ảnh xám (Grayscale)\nvà lật màu (đảm bảo nền đen chữ trắng);
+:Chuyển đổi ảnh xám (Grayscale)\nvà lật màu (nền đen chữ trắng);
 :Khử nhiễu và Cắt sát viền chữ\n(cv2.boundingRect);
 :Làm đậm nét vẽ tự động\n(cv2.dilate);
 :Chèn lề vuông và Thu phóng (Resize)\nvề kích thước chuẩn 28x28;
-:Duỗi thẳng ảnh và Chuẩn hóa\n(Biến thành Vector 784 phần tử,\ngiá trị từ 0.0 - 1.0);
+:Duỗi thẳng ảnh và Chuẩn hóa\n(Vector 784 phần tử, giá trị 0.0 - 1.0);
 
 | 2.2 MODULE TRÍ TUỆ NHÂN TẠO (model_logic.py) |
 :Tiếp nhận Vector 784 chiều;
-:Load mô hình đã huấn luyện\n(từ file saved_model.pkl);
-:Tính điểm thô (Linear)\n(Nhân Vector với Ma trận Trọng số);
-:Tính xác suất %\n(Qua hàm Logistic/Softmax);
-:Tìm chữ cái có xác suất cao nhất;
+:Load/Train mô hình Logistic Regression;
+:Tính điểm thô (Linear);
+:Tính xác suất (Hàm Softmax)\nvà chọn Class cao nhất;
 
 | 3. OUTPUT |
 fork
-  :Trả về ký tự dự đoán\n(VD: Ký tự "a");
+  :Trả về ký tự dự đoán\n(VD: Ký tự "A");
 fork again
   :Ghi kết quả vào Log\n(Output/result.txt);
 fork again
-  :Lưu ảnh 28x28 đã xử lý\n(Output/Debug/debug_Hinh1.jpg);
+  :Lưu ảnh 28x28 đã xử lý\n(Output/Debug/...);
 end merge
 stop
 @enduml
