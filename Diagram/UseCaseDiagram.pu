@@ -1,0 +1,37 @@
+@startuml UseCaseDiagram
+left to right direction
+skinparam packageStyle rectangle
+skinparam usecase {
+    BackgroundColor #E3F2FD
+    BorderColor #0D47A1
+    ArrowColor #0D47A1
+}
+skinparam actor {
+    BackgroundColor #FFF
+    BorderColor #0D47A1
+}
+
+actor "Người dùng" as User
+
+rectangle "Hệ thống Nhận diện Chữ cái (Logistic Regression)" {
+    usecase "1. Cung cấp ảnh đầu vào\n(Vẽ Paint / Chụp ảnh)" as UC1
+    usecase "2. Chạy chương trình" as UC2
+    
+    usecase "3. Huấn luyện mô hình\n(Tự động nếu thiếu file .pkl)" as UC3
+    usecase "4. Tiền xử lý ảnh" as UC4
+    usecase "5. Dự đoán chữ cái" as UC5
+    
+    usecase "6. Xem file kết quả\n(result.txt)" as UC6
+    usecase "7. Kiểm tra ảnh thu nhỏ\n(Thư mục Debug)" as UC7
+    
+    UC2 .down.> UC3 : <<include>>
+    UC2 .down.> UC5 : <<include>>
+    UC5 .right.> UC4 : <<include>>
+    UC3 .right.> UC4 : <<include>>
+}
+
+User --> UC1
+User --> UC2
+User --> UC6
+User --> UC7
+@enduml

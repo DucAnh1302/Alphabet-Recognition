@@ -1,0 +1,48 @@
+@startuml ActivityDiagram
+skinparam conditionStyle insideDiamond
+skinparam Activity {
+  BackgroundColor #FAFAFA
+  BorderColor #2E7D32
+  ArrowColor #1B5E20
+}
+
+start
+:Khởi tạo **DataLoader** và **AlphabetRecognizer**;
+
+if (Đã tồn tại file **saved_model.pkl**?) then (Có)
+    :Gọi hàm **load()**;
+    :Thông báo "Load model cũ thành công";
+else (Không)
+    :Thông báo "Không tìm thấy model, bắt đầu Train";
+    :Gọi hàm **load_training_data()**\n(Tải tối đa 3000 ảnh/nhãn từ Kaggle);
+    note right: Sử dụng preprocess_image()\nvới is_input=False
+    :Gọi hàm **train(X, y)**\n(Huấn luyện Logistic Regression);
+    :Gọi hàm **save()**\n(Lưu model ra file .pkl);
+endif
+
+:Quét thư mục **Input**;
+
+if (Thư mục trống?) then (Có)
+    :Thông báo lỗi "Thư mục trống";
+    stop
+else (Không)
+    :Gọi hàm **load_input_folder()**;
+    
+    while (Còn file ảnh chưa xử lý?) is (Còn)
+        :Đọc file ảnh (Grayscale);
+        :Tiền xử lý ảnh (Khử nền, cắt viền, làm đậm);\n(is_input=True)
+        :Lưu ảnh 28x28 vào thư mục **Output/Debug**;
+        :Duỗi phẳng thành mảng 784 chiều;
+        :Đưa mảng vào mảng tổng (X_input);
+    endwhile (Hết)
+
+    :Gọi hàm **predict(X_input)**;
+    :Ghép kết quả dự đoán với tên file;
+    
+    :Tạo và mở file **Output/result.txt**;
+    :Ghi log định dạng "Tên file | Kết quả";
+    :Thông báo hoàn tất;
+endif
+
+stop
+@enduml

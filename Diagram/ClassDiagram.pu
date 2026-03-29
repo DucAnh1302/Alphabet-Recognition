@@ -1,0 +1,42 @@
+@startuml ClassDiagram
+skinparam classAttributeIconSize 0
+skinparam roundcorner 10
+skinparam class {
+    BackgroundColor #F8F9FA
+    BorderColor #343A40
+    ArrowColor #007BFF
+}
+
+class Config << (M, #FFDD00) Module >> {
+    + IMG_SIZE: tuple(28, 28)
+    + BASE_DIR: str
+    + DATA_PATH: str
+    + INPUT_PATH: str
+    + OUTPUT_PATH: str
+    + MODEL_PATH: str
+}
+
+class DataLoader {
+    + preprocess_image(image_path: str, is_input: bool): numpy.ndarray
+    + load_training_data(root_folder: str, max_per_class: int): tuple
+    + load_input_folder(input_folder: str): tuple
+}
+
+class AlphabetRecognizer {
+    - model: LogisticRegression
+    - is_trained: bool
+    + train(X: numpy.ndarray, y: numpy.ndarray): void
+    + predict(X_input: numpy.ndarray): numpy.ndarray
+    + save(filepath: str): void
+    + load(filepath: str): bool
+}
+
+class Main << (M, #FFDD00) Module >> {
+    + main(): void
+}
+
+Main --> DataLoader : Khởi tạo & Sử dụng >
+Main --> AlphabetRecognizer : Khởi tạo & Sử dụng >
+DataLoader ..> Config : <import>
+Main ..> Config : <import>
+@enduml

@@ -1,0 +1,17 @@
+# Bỏ qua file CSV gốc vì dung lượng lên tới 1.3GB (GitHub giới hạn 100MB)
+emnist-byclass-train.csv
+
+# Bỏ qua thư mục Data chứa hàng vạn ảnh gen ra từ tool
+Data/
+
+# Bỏ qua các thư mục chứa ảnh test đầu vào và kết quả đầu ra
+Input/
+Output/
+
+# Bỏ qua folder ThamData vì không cần thiết
+ThamData/
+
+# Bỏ qua các file rác sinh ra trong quá trình chạy Python
+__pycache__/
+*.pyc
+.DS_Store
