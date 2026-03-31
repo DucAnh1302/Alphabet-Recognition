@@ -7,7 +7,7 @@ base_path = "Data"
 # Định nghĩa các loại thư mục muốn tạo
 structure = {
     "Uppercase": string.ascii_uppercase, # Tự sinh ra 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
-    "Lowercase": string.ascii_lowercase, # Tự sinh ra 'abcdefghijklmnopqrstuvwxyz'
+    #"Lowercase": string.ascii_lowercase, # Tự sinh ra 'abcdefghijklmnopqrstuvwxyz'
     #"Numbers": string.digits           # Thêm dòng này nếu bạn muốn tạo 0-9
 }
 

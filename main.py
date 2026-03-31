@@ -10,8 +10,7 @@ def main():
     data_loader = DataLoader()
     recognizer = AlphabetRecognizer()
 
-    # 2. Kiểm tra xem có model đã lưu chưa, nếu chưa thì train mới
-    # (Trong thực tế, bạn có thể comment dòng train lại nếu đã train rồi)
+    # Kiểm tra xem có model đã lưu chưa, nếu chưa thì train mới
     if not recognizer.load(MODEL_PATH):
         print("Không tìm thấy model cũ, bắt đầu quá trình Training mới...")
         
@@ -21,8 +20,8 @@ def main():
             return
 
         # Gọi hàm và truyền số lượng muốn lấy là biến max_per_class (ví dụ 400 ảnh mỗi chữ thì max_per_class = 400)
-        #X, y = data_loader.load_training_data(DATA_PATH, max_per_class=3000)
-        X, y = data_loader.load_training_data(DATA_PATH)
+        X, y = data_loader.load_training_data(DATA_PATH, max_per_class=2500)
+        #X, y = data_loader.load_training_data(DATA_PATH)
         
         if len(X) == 0:
             print("Lỗi: Không tìm thấy ảnh nào trong Data.")
@@ -32,7 +31,7 @@ def main():
         accuracy = recognizer.train(X, y)
         recognizer.save(MODEL_PATH)
     
-    # 3. Dự đoán ảnh trong thư mục Input
+    # Dự đoán ảnh trong thư mục Input
     print(f"\nĐang đọc dữ liệu từ: {INPUT_PATH}")
     if not os.path.exists(INPUT_PATH):
         os.makedirs(INPUT_PATH)
@@ -48,7 +47,7 @@ def main():
     # Thực hiện dự đoán
     predictions = recognizer.predict(X_input)
 
-    # 4. Ghi kết quả ra file Output
+    # Ghi kết quả ra file Output
     if not os.path.exists(OUTPUT_PATH):
         os.makedirs(OUTPUT_PATH)
     
