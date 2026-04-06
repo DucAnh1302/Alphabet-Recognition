@@ -3,6 +3,7 @@ import os
 import random
 import numpy as np
 import matplotlib.pyplot as plt
+import math
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from src import DataLoader, AlphabetRecognizer
@@ -21,14 +22,22 @@ def main():
     clf = recognizer.model
     
     # Lấy đáp án dự đoán cuối cùng
-    predicted_label = clf.predict([X_flat])[0]
+    predicted_label = recognizer.predict(np.array([X_flat]))[0]
     
     # Tìm index của đáp án này trong mảng classes_
     class_index = np.where(clf.classes_ == predicted_label)[0][0]
     
-    # Lấy ra bộ Trọng số (784,) của riêng chữ cái này và phục hồi thành 28x28
+    # Lấy ra bộ Trọng số của riêng chữ cái này và đưa về ma trận vuông để trực quan.
     weight_vector = clf.coef_[class_index]
-    weight_matrix = weight_vector.reshape(28, 28)
+    feat_dim = weight_vector.size
+    side = int(math.sqrt(feat_dim))
+    if side * side == feat_dim:
+        weight_matrix = weight_vector.reshape(side, side)
+    else:
+        side = int(math.ceil(math.sqrt(feat_dim)))
+        padded = np.zeros(side * side)
+        padded[:feat_dim] = weight_vector
+        weight_matrix = padded.reshape(side, side)
 
     # --- VẼ BIỂU ĐỒ ---
     fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(10, 5))
@@ -43,7 +52,7 @@ def main():
     # Màu đỏ (âm) là vùng nét bút KHÔNG NÊN vẽ vào.
     # Màu xanh (dương) là vùng nét bút NÊN CÓ để tạo thành chữ này.
     cax = ax2.imshow(weight_matrix, cmap='RdBu', vmin=-np.max(np.abs(weight_matrix)), vmax=np.max(np.abs(weight_matrix)))
-    ax2.set_title(f'Trọng số mô hình đã học cho chữ "{predicted_label}"')
+    ax2.set_title(f'Trọng số đặc trưng mô hình đã học cho chữ "{predicted_label}"')
     fig.colorbar(cax, ax=ax2)
     ax2.axis('off')
 

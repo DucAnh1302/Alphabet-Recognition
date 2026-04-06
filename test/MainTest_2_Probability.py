@@ -23,7 +23,7 @@ def main():
     classes = clf.classes_
     
     # HÀM TÍNH XÁC SUẤT CỦA THƯ VIỆN (Tương đương hàm Softmax)
-    probabilities = clf.predict_proba([X_flat])[0] * 100 # Nhân 100 để ra phần trăm
+    probabilities = recognizer.predict_proba(np.array([X_flat]))[0] * 100 # Nhân 100 để ra phần trăm
     
     top_5_indices = np.argsort(probabilities)[-5:][::-1]
     top_5_classes = [classes[i] for i in top_5_indices]

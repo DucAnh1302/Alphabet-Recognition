@@ -21,7 +21,8 @@ def get_label_folder(label_code):
         return "Uppercase", char
     elif 36 <= label_code <= 61:
         char = chr(label_code - 36 + ord('a'))
-        return "Lowercase", char
+        #-return "Lowercase", char
+        return None, None
     return None, None
 
 def convert_csv_to_images():

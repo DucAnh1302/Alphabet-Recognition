@@ -26,12 +26,15 @@ def main():
     clf = recognizer.model
     classes = clf.classes_ # Danh sách các nhãn ('a', 'b', 'c'...)
     
+    # Chuyển ảnh về không gian đặc trưng mà model đã học (HOG)
+    X_features = recognizer.transform_features(np.array([X_flat]))[0]
+
     # Lấy W (trọng số) và b (bias) từ model scikit-learn
-    W = clf.coef_ # Ma trận kích thước (số_class, 784)
+    W = clf.coef_ # Ma trận kích thước (số_class, số đặc trưng)
     b = clf.intercept_  # Vector kích thước (số_class,)
     
     # TỰ TÍNH CÔNG THỨC TOÁN HỌC: Z = W * X + b
-    Z_scores = np.dot(W, X_flat) + b
+    Z_scores = np.dot(W, X_features) + b
     
     # Lấy top 5 chữ cái có điểm Z cao nhất
     top_5_indices = np.argsort(Z_scores)[-5:][::-1]
