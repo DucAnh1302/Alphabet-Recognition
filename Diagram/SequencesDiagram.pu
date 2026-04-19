@@ -1,0 +1,48 @@
+@startuml Interface
+actor User
+participant "gui: DrawingApp" as GUI
+participant "loader: DataLoader" as Data
+participant "cv2 (OpenCV)" as CV
+participant "recognizer: AlphabetRecognizer" as Model
+
+User -> GUI: Vẽ chữ & Nhấn "Phân tích AI"
+GUI -> GUI: Lưu ảnh temp_draw.jpg
+GUI -> Data: preprocess_image(temp_draw.jpg, is_input=True)
+Data -> CV: imread(), GaussianBlur(), adaptiveThreshold()
+Data -> CV: findContours(), cắt khung, dilate()
+Data --> GUI: Trả về X_flat (Vector 784 chiều)
+GUI -> Model: transform_features(X_flat)
+Model -> CV: HOGDescriptor.compute()
+Model --> GUI: Trả về X_hog (Vector 324 chiều)
+GUI -> Model: predict_proba(X_flat)
+Model --> GUI: Trả về probabilities (Xác suất Softmax)
+GUI -> GUI: Tính top 5 Z-score (Z = W*X + b)
+GUI -> GUI: Trích xuất ma trận trọng số thắng cuộc
+GUI -> GUI: Cập nhật 6 axes trên Matplotlib
+GUI --> User: Hiển thị kết quả & XAI Dashboard
+@enduml
+
+@startuml Training
+participant "MainTest" as Main
+participant "loader: DataLoader" as Data
+participant "recognizer: AlphabetRecognizer" as Model
+participant "sklearn: LogisticRegression" as Sklearn
+participant "joblib" as Joblib
+
+Main -> Model: load(MODEL_PATH)
+Model --> Main: False (Không tìm thấy)
+Main -> Data: load_training_data(DATA_PATH)
+loop Duyệt các thư mục A-Z
+  Data -> Data: preprocess_image()
+end
+Data --> Main: Trả về X (Images), y (Labels)
+Main -> Model: train(X, y)
+Model -> Sklearn: train_test_split(test_size=0.2)
+Model -> Model: _extract_hog_features(X_train)
+Model -> Sklearn: fit(X_train_hog, y_train) (solver='lbfgs')
+Model -> Sklearn: predict(X_test_hog)
+Model -> Sklearn: accuracy_score()
+Model --> Main: Trả về accuracy (95.52%)
+Main -> Model: save(MODEL_PATH)
+Model -> Joblib: dump(model, MODEL_PATH)
+@enduml
