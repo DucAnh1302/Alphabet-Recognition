@@ -1,0 +1,25 @@
+@startuml State Diagram
+[*] --> KhoiTao : Khởi tạo Object
+KhoiTao --> ChoDuLieuHuanLuyen : Không tìm thấy saved_model.pkl
+
+state ChoDuLieuHuanLuyen {
+  [*] --> ĐocAnh
+  ĐocAnh --> TienXuLy : OpenCV
+  TienXuLy --> TrichXuatHOG : Chuyển 784 -> 324 chiều
+}
+
+ChoDuLieuHuanLuyen --> DangHuanLuyen : Gọi hàm train()
+
+state DangHuanLuyen {
+  [*] --> ToiUuHoaLBFGS
+  ToiUuHoaLBFGS --> KiemThuAccuracy
+}
+
+KhoiTao --> SanSang : Tải thành công saved_model.pkl
+DangHuanLuyen --> SanSang : Lưu model thành công
+
+SanSang --> DangSuyLuan : Nhận ảnh Input
+DangSuyLuan --> SanSang : Trả về Nhãn & Xác suất Softmax
+
+SanSang --> [*] : Tắt chương trình
+@enduml

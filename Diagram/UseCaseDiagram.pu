@@ -1,44 +1,26 @@
-@startuml UseCaseDiagram
+@startuml Hệ thống chính Diagram
 left to right direction
 skinparam packageStyle rectangle
-skinparam defaultFontName Arial
-
-skinparam usecase {
-    BackgroundColor<<UserAction>> #E3F2FD
-    BorderColor<<UserAction>> #0D47A1
-    
-    BackgroundColor<<SystemAction>> #FFF9C4
-    BorderColor<<SystemAction>> #F57F17
-    
-    ArrowColor #0D47A1
-}
-
-skinparam actor {
-    BackgroundColor #E3F2FD
-    BorderColor #0D47A1
-}
-
 actor "Người dùng" as User
 
-rectangle "Hệ thống Nhận diện Chữ cái (Logistic Regression)" {
-    usecase "1. Cung cấp ảnh đầu vào\n(Thư mục Input)" as UC1 <<UserAction>>
-    usecase "2. Chạy chương trình\n(main.py)" as UC2 <<UserAction>>
-    
-    usecase "3. Huấn luyện mô hình\n(Tự động nếu thiếu file .pkl)" as UC3 <<SystemAction>>
-    usecase "4. Tiền xử lý ảnh\n(Resize, Flatten, Threshold)" as UC4 <<SystemAction>>
-    usecase "5. Dự đoán chữ cái" as UC5 <<SystemAction>>
-    
-    usecase "6. Xem file kết quả\n(result.txt)" as UC6 <<UserAction>>
-    usecase "7. Kiểm tra ảnh thu nhỏ\n(Thư mục Debug)" as UC7 <<UserAction>>
-    
-    UC2 .down.> UC3 : <<include>>
-    UC2 .down.> UC5 : <<include>>
-    UC5 .right.> UC4 : <<include>>
-    UC3 .right.> UC4 : <<include>>
+rectangle "Hệ thống Nhận diện Chữ cái (HOG + Logistic)" {
+  usecase "Vẽ chữ cái lên bảng điện tử" as UC1
+  usecase "Phân tích và Dự đoán chữ cái" as UC2
+  usecase "Xem bảng điều khiển XAI (6 bước)" as UC3
+  usecase "Xóa bảng vẽ" as UC4
+  usecase "Huấn luyện mô hình (Training)" as UC5
+  usecase "Dự đoán hàng loạt (Batch Inference)" as UC6
+  usecase "Xem log kết quả (result.txt)" as UC7
 }
 
 User --> UC1
 User --> UC2
+User --> UC3
+User --> UC4
+User --> UC5
 User --> UC6
 User --> UC7
+
+UC2 .> UC3 : <<include>>
 @enduml
+

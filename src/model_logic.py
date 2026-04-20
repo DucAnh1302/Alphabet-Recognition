@@ -11,10 +11,10 @@ class AlphabetRecognizer:
     def __init__(self):
         # HOG descriptor giúp logistic regression học đường nét tốt hơn nhiều so với pixel thô.
         self.hog = cv2.HOGDescriptor(
-            (28, 28),  # winSize
-            (14, 14),  # blockSize
-            (7, 7),    # blockStride
-            (7, 7),    # cellSize
+            (28, 28),  # winSize: kích thước cửa sổ
+            (14, 14),  # blockSize: kích thước ô cơ sở
+            (7, 7),    # blockStride: kích thước chuẩn hóa
+            (7, 7),    # cellSize: bước trượt
             9          # nbins
         )
 

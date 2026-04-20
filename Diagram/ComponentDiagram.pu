@@ -1,0 +1,34 @@
+@startuml Component Diagram
+package "Nguồn dữ liệu (Data Source)" {
+  [Kaggle CSV] -> [ToolKaggleToImages.py] : Chuyển đổi
+  [ToolKaggleToImages.py] -> [Thư mục Data/] : Sinh ảnh (A-Z)
+  [Thư mục Input/]
+}
+
+package "Lớp Lõi (Core Source - src/)" {
+  [config.py] 
+  [data_loader.py]
+  [model_logic.py]
+  [gui.py]
+  
+  [data_loader.py] ..> [config.py] : lấy đường dẫn
+  [model_logic.py] ..> [config.py]
+  [gui.py] ..> [data_loader.py] : sử dụng
+  [gui.py] ..> [model_logic.py] : sử dụng
+}
+
+package "Tệp Thực thi (Executables)" {
+  [main.py] ..> [gui.py] : khởi chạy UI
+  [MainTestMainForProject.py] ..> [data_loader.py]
+  [MainTestMainForProject.py] ..> [model_logic.py]
+}
+
+package "Đầu ra (Output)" {
+  [saved_model.pkl]
+  [Thư mục Output/result.txt]
+}
+
+[model_logic.py] --> [saved_model.pkl] : Lưu/Tải mô hình
+[MainTestMainForProject.py] --> [Thư mục Output/result.txt] : Ghi kết quả
+[Thư mục Input/] --> [MainTestMainForProject.py] : Đọc ảnh test
+@enduml
